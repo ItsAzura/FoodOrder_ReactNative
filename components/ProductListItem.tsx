@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     padding: 10,
     borderRadius: 10,
+    margin: 10,
   },
   img: {
     width: "100%",
