@@ -1,3 +1,4 @@
+//Định nghĩa kiểu dữ liệu cho một sản phẩm trong cửa hàng.
 export type Product = {
   id: number;
   image: string | null;
@@ -5,8 +6,10 @@ export type Product = {
   price: number;
 };
 
-export type PizzaSize = 'S' | 'M' | 'L' | 'XL';
+//Định nghĩa kiểu dữ liệu cho kích thước của pizza.
+export type PizzaSize = "S" | "M" | "L" | "XL";
 
+//Định nghĩa kiểu dữ liệu cho một mục trong giỏ hàng.
 export type CartItem = {
   id: string;
   product: Product;
@@ -15,15 +18,18 @@ export type CartItem = {
   quantity: number;
 };
 
+//Định nghĩa kiểu dữ liệu cho giỏ hàng.
 export const OrderStatusList: OrderStatus[] = [
-  'New',
-  'Cooking',
-  'Delivering',
-  'Delivered',
+  "New",
+  "Cooking",
+  "Delivering",
+  "Delivered",
 ];
 
-export type OrderStatus = 'New' | 'Cooking' | 'Delivering' | 'Delivered';
+//Định nghĩa kiểu dữ liệu cho trạng thái của đơn hàng.
+export type OrderStatus = "New" | "Cooking" | "Delivering" | "Delivered";
 
+//Định nghĩa kiểu dữ liệu cho một đơn hàng.
 export type Order = {
   id: number;
   created_at: string;
@@ -34,6 +40,7 @@ export type Order = {
   order_items?: OrderItem[];
 };
 
+//Định nghĩa kiểu dữ liệu cho một mục trong đơn hàng.
 export type OrderItem = {
   id: number;
   product_id: number;
@@ -43,6 +50,7 @@ export type OrderItem = {
   quantity: number;
 };
 
+//Định nghĩa kiểu dữ liệu cho một hồ sơ người dùng.
 export type Profile = {
   id: string;
   group: string;

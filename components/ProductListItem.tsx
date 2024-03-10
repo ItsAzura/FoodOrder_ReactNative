@@ -16,7 +16,8 @@ type ProductListItemProps = {
 //Định nghĩa một functional component ProductListItem, nhận props product thông qua destructuring.
 const ProductListItem = ({ product }: ProductListItemProps) => {
   return (
-    <Link href={`/${product.id}`} asChild>
+    //Link: Điều hướng người dùng đến các trang khác hoặc điều hướng nội dung trong ứng dụng mà không cần tải lại trang
+    <Link href={`/menu/${product.id}`} asChild>
       <Pressable style={styles.container}>
         <Image
           source={{ uri: product.image || defaultPizzaImg }} //Có img thì product.image ko thì defaultPizzaImg
@@ -34,11 +35,12 @@ export default ProductListItem;
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "white",
     flex: 1,
-    alignItems: "flex-start",
-    padding: 10,
+    padding: 12,
     borderRadius: 10,
     maxWidth: "50%",
+    marginHorizontal: 6,
   },
   img: {
     width: "100%",
@@ -47,13 +49,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    marginVertical: 10,
-    marginHorizontal: 10,
+    marginVertical: 12,
   },
   price: {
     fontSize: 18,
     fontWeight: "600",
     color: Colors.light.tint,
-    marginHorizontal: 10,
   },
 });
