@@ -13,10 +13,13 @@ const sizes = ["S", "M", "L", "XL"];
 const ProductDetailsScreen = () => {
   const { id } = useLocalSearchParams(); //useLocalSearchParams: Hook này trả về một object chứa các query params của URL.
 
+  //useState: Hook này cho phép bạn thêm state vào các functional component.
   const [selectSize, setSelectSize] = useState("S");
 
+  //find: Phương thức này trả về giá trị của phần tử đầu tiên trong mảng thỏa mãn hàm kiểm tra được cung cấp.
   const product = products.find((p) => p.id.toString() === id);
 
+  //addToCard: Hàm này sẽ được gọi khi người dùng nhấn vào nút "Add to cart".
   const addToCard = () => {
     console.warn("addToCard - size: ", selectSize);
   };
@@ -37,10 +40,10 @@ const ProductDetailsScreen = () => {
       <View style={styles.sizes}>
         {sizes.map((size) => (
           <Pressable
-            onPress={() => setSelectSize(size)}
+            onPress={() => setSelectSize(size)} //setSelectSize: Hàm này sẽ được gọi khi người dùng nhấn vào một size.
             style={[
               styles.size,
-              { backgroundColor: selectSize === size ? "lightgrey" : "white" },
+              { backgroundColor: selectSize === size ? "lightgrey" : "white" }, //Nếu size được chọn thì màu sẽ là lightgrey, ngược lại thì là white.
             ]}
             key={size}
           >
@@ -48,7 +51,7 @@ const ProductDetailsScreen = () => {
               style={[
                 styles.sizeText,
                 {
-                  color: selectSize === size ? "white" : "black",
+                  color: selectSize === size ? "white" : "black", //Nếu size được chọn thì màu sẽ là white, ngược lại thì là black.
                 },
               ]}
             >
@@ -60,7 +63,10 @@ const ProductDetailsScreen = () => {
 
       <Text style={styles.price}>${product.price}</Text>
 
-      <Button text="Add to cart" onPress={addToCard} />
+      <Button //Button: Component này sẽ hiển thị một nút nhấn.
+        text="Add to cart"
+        onPress={addToCard}
+      />
     </View>
   );
 };

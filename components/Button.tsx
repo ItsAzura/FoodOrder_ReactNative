@@ -2,10 +2,12 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import Colors from "../constants/Colors";
 import { forwardRef } from "react";
 
+//mô tả các props mà một component Button cần nhận
 type ButtonProps = {
   text: string;
 } & React.ComponentPropsWithoutRef<typeof Pressable>;
 
+//Định nghĩa một functional component Button sử dụng forwardRef để truyền ref xuống phần tử Pressable bên trong.
 const Button = forwardRef<View | null, ButtonProps>(
   ({ text, ...pressableProps }, ref) => {
     return (
