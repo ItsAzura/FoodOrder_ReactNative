@@ -4,17 +4,20 @@ import { Stack, useLocalSearchParams } from "expo-router";
 import products from "@/assets/data/products";
 import { defaultPizzaImg } from "@/components/ProductListItem";
 import Button from "@/components/Button";
+import { useCart } from "@/providers/CartProvider";
+import { PizzaSize } from "@/types";
 
-const sizes = ["S", "M", "L", "XL"];
+const sizes: PizzaSize[] = ["S", "M", "L", "XL"];
 
 //Khi bạn tạo một file với tên [id].tsx trong thư mục pages của ứng dụng Next.js, nó sẽ tạo ra một dynamic route cho trang đó.
 //Dynamic route này có thể nhận các giá trị động cho id từ URL. \
 //Ví dụ, nếu URL là /products/123, thì 123 sẽ là giá trị của id.
 const ProductDetailsScreen = () => {
   const { id } = useLocalSearchParams(); //useLocalSearchParams: Hook này trả về một object chứa các query params của URL.
+  const { addItem } = useCart(); //useCart: Hook này trả về các thông tin của giỏ hàng.
 
   //useState: Hook này cho phép bạn thêm state vào các functional component.
-  const [selectSize, setSelectSize] = useState("S");
+  const [selectSize, setSelectSize] = useState<PizzaSize>("S");
 
   //find: Phương thức này trả về giá trị của phần tử đầu tiên trong mảng thỏa mãn hàm kiểm tra được cung cấp.
   const product = products.find((p) => p.id.toString() === id);
@@ -22,6 +25,8 @@ const ProductDetailsScreen = () => {
   //addToCard: Hàm này sẽ được gọi khi người dùng nhấn vào nút "Add to cart".
   const addToCard = () => {
     console.warn("addToCard - size: ", selectSize);
+    if (!product) return;
+    addItem(product, selectSize);
   };
 
   if (!product) return <Text>Product not found</Text>;
