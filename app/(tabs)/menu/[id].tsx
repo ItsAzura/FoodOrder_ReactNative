@@ -1,6 +1,6 @@
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import React, { useState } from "react";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import products from "@/assets/data/products";
 import { defaultPizzaImg } from "@/components/ProductListItem";
 import Button from "@/components/Button";
@@ -16,6 +16,8 @@ const ProductDetailsScreen = () => {
   const { id } = useLocalSearchParams(); //useLocalSearchParams: Hook này trả về một object chứa các query params của URL.
   const { addItem } = useCart(); //useCart: Hook này trả về các thông tin của giỏ hàng.
 
+  const router = useRouter(); //useRouter: Hook này trả về một object chứa các thông tin của router.
+
   //useState: Hook này cho phép bạn thêm state vào các functional component.
   const [selectSize, setSelectSize] = useState<PizzaSize>("S");
 
@@ -27,6 +29,7 @@ const ProductDetailsScreen = () => {
     console.warn("addToCard - size: ", selectSize);
     if (!product) return;
     addItem(product, selectSize);
+    router.push("/cart"); //router.push: Phương thức này sẽ chuyển hướng người dùng đến một cart screen.
   };
 
   if (!product) return <Text>Product not found</Text>;

@@ -54,7 +54,8 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <CartProvider>
+      <CartProvider //đảm bảo rằng các thành phần đó đều có thể truy cập dữ liệu về giỏ hàng mà không cần truyền props.
+      > 
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="cart" options={{ presentation: "modal" }} />

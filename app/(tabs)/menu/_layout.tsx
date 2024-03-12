@@ -8,6 +8,7 @@ export default function MenuStack() {
     <Stack
       screenOptions={{
         headerRight: () => (
+          //set up cart icon bên phải menu
           <Link href="/cart" asChild>
             <Pressable>
               {({ pressed }) => (
