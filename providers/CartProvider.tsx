@@ -6,6 +6,7 @@ type CartType = {
   items: CartItem[]; //items là một mảng chứa các đối tượng CartItem.
   addItem: (Product: Product, size: CartItem["size"]) => void; // hàm được sử dụng để thêm một sản phẩm mới vào giỏ hàng.
   updateQuantity: (itemId: string, amount: -1 | 1) => void; //hàm được sử dụng để cập nhật số lượng của một sản phẩm trong giỏ hàng.
+  total: number; //total sẽ chứa tổng giá trị của các sản phẩm trong giỏ hàng.
 };
 
 //định nghĩa một CartContext với giá trị mặc định là một object có kiểu dữ liệu CartType.
@@ -13,6 +14,7 @@ const CartContext = createContext<CartType>({
   items: [], //Một mảng rỗng đại diện cho danh sách sản phẩm trong giỏ hàng.
   addItem: () => {}, //Một hàm rỗng không làm gì cả
   updateQuantity: () => {}, //Một hàm rỗng không làm gì cả
+  total: 0, //giá trị ban đầu của total
 });
 
 //CartProvider:để tạo ra một context provider cho giỏ hàng. Hàm này nhận một đối số là children, đại diện cho các thành phần con được bọc bên trong CartProvider.
@@ -61,9 +63,17 @@ const CartProvider = ({ children }: PropsWithChildren) => {
     setItems(updateItems); //Cập nhật lại giá trị của items.
   };
 
+  //Tính tổng giá trị của các sản phẩm trong giỏ hàng.
+  const total = items.reduce(
+    (sum, item) => (sum += item.product.price * item.quantity),
+    0
+  );
+
   return (
     //Trả về một CartContext.Provider với giá trị của items và addItem.
-    <CartContext.Provider value={{ items: items, addItem, updateQuantity }}>
+    <CartContext.Provider
+      value={{ items: items, addItem, updateQuantity, total }}
+    >
       {children}
     </CartContext.Provider>
   );
