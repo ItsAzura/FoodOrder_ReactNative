@@ -1,7 +1,9 @@
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import { View, Text, StyleSheet, TextInput, Image } from "react-native";
 import React, { useState } from "react";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import Button from "@/components/Button";
+import { defaultPizzaImg } from "@/components/ProductListItem";
+import * as ImagePicker from "expo-image-picker";
 
 const CreateProductScreen = () => {
   //Khởi tạo trạng thái của name
@@ -10,12 +12,16 @@ const CreateProductScreen = () => {
   const [price, setPrice] = useState("");
   //Khởi tạo trạng thái của error
   const [errors, setErrors] = useState("");
+  //Khởi tạo trạng thái của image
+  const [img, setImg] = useState<string | null>(null);
 
+  //Hàm reset các trường input
   const resetFields = () => {
     setName("");
     setPrice("");
   };
 
+  //khi tạo sản phẩm mớI
   const onCreate = () => {
     if (!validateInput()) {
       return;
@@ -26,6 +32,7 @@ const CreateProductScreen = () => {
     resetFields();
   };
 
+  //Hàm kiểm tra xem lỗi khi nhập vào các trường hay không?
   const validateInput = () => {
     setErrors("");
     if (!name) {
@@ -43,9 +50,29 @@ const CreateProductScreen = () => {
     return true;
   };
 
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImg(result.assets[0].uri);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text>create</Text>
+
+      <Image source={{ uri: img || defaultPizzaImg }} style={styles.image} />
+
+      <Text onPress={pickImage} style={styles.textButton}>
+        Select Image
+      </Text>
 
       <Text style={styles.label}>Product Name</Text>
       <TextInput
