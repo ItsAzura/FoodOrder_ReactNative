@@ -12,7 +12,7 @@ export default function MenuStack() {
           title: "Menu",
           headerRight: () => (
             //set up cart icon bên phải menu
-            <Link href="/cart" asChild>
+            <Link href="/(admin)/menu/create" asChild>
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesome
@@ -38,7 +38,7 @@ export default function MenuStack() {
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesome
-                    name="pencil"
+                    name="pencil-square-o"
                     size={25}
                     color={Colors.light.tint}
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}

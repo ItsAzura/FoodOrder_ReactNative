@@ -15,12 +15,13 @@ type ProductListItemProps = {
 
 //Định nghĩa một functional component ProductListItem, nhận props product thông qua destructuring.
 const ProductListItem = ({ product }: ProductListItemProps) => {
-  const segments = useSegments();
+  const segments = useSegments(); //useSegments: Hook này trả về một mảng chứa các segment của URL hiện tại.
   console.log(segments);
+  console.log(`/${segments.join("/")}/${product.id}`);
 
   return (
     //Link: Điều hướng người dùng đến các trang khác hoặc điều hướng nội dung trong ứng dụng mà không cần tải lại trang
-    <Link href={`./${segments[0]}/menu/${product.id}`} asChild>
+    <Link href={`./${segments.join("/")}/${product.id}`} asChild>
       <Pressable style={styles.container}>
         <Image
           source={{ uri: product.image || defaultPizzaImg }} //Có img thì product.image ko thì defaultPizzaImg
