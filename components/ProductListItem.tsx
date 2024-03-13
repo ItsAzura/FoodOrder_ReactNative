@@ -3,7 +3,7 @@ import { Text, View } from "@/components/Themed";
 import Colors from "@/constants/Colors";
 import { Image } from "react-native";
 import { Product } from "@/types";
-import { Link } from "expo-router";
+import { Link, useSegments } from "expo-router";
 
 export const defaultPizzaImg =
   "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/food/default.png";
@@ -15,9 +15,12 @@ type ProductListItemProps = {
 
 //Định nghĩa một functional component ProductListItem, nhận props product thông qua destructuring.
 const ProductListItem = ({ product }: ProductListItemProps) => {
+  const segments = useSegments();
+  console.log(segments);
+
   return (
     //Link: Điều hướng người dùng đến các trang khác hoặc điều hướng nội dung trong ứng dụng mà không cần tải lại trang
-    <Link href={`/menu/${product.id}`} asChild>
+    <Link href={`./${segments[0]}/menu/${product.id}`} asChild>
       <Pressable style={styles.container}>
         <Image
           source={{ uri: product.image || defaultPizzaImg }} //Có img thì product.image ko thì defaultPizzaImg
