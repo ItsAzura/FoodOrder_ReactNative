@@ -8,7 +8,6 @@ const index = () => {
   return (
     <View style={{ flex: 1, justifyContent: "center", padding: 10 }}>
       <Stack.Screen options={{ title: "Welcome" }} />
-
       <Link href={"/(tabs)"} asChild>
         <Button text="User" />
       </Link>
