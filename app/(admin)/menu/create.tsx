@@ -25,6 +25,7 @@ const CreateProductScreen = () => {
     setPrice("");
   };
 
+  //Hàm khi người dùng nhấn vào nút "Create" hoặc "Update"
   const onSubmit = () => {
     if (isUpdating) {
       onUpdate();
@@ -44,6 +45,7 @@ const CreateProductScreen = () => {
     resetFields();
   };
 
+  //Khi cập nhật sản phẩm
   const onUpdate = () => {
     if (!validateInput()) {
       return;
@@ -54,10 +56,12 @@ const CreateProductScreen = () => {
     resetFields();
   };
 
+  //Hàm xóa sản phẩm
   const onDelete = () => {
     console.warn("Delete");
   };
 
+  //Hàm xác nhận xóa sản phẩm
   const confirmDelete = () => {
     Alert.alert("Confirm", "Are you sure you want to delete this product?", [
       {
@@ -111,7 +115,7 @@ const CreateProductScreen = () => {
   return (
     <View style={styles.container}>
       <Stack.Screen
-        options={{ title: isUpdating ? "Update Product" : "Create Product" }}
+        options={{ title: isUpdating ? "Update Product" : "Create Product" }} //Nếu isUpdating = true thì title sẽ là "Update Product" ngược lại thì là "Create Product"
       />
 
       <Text>create</Text>
@@ -144,8 +148,11 @@ const CreateProductScreen = () => {
       />
 
       <Text style={{ color: "red" }}>{errors}</Text>
-      <Button text={isUpdating ? "Update" : "Create"} onPress={onSubmit} />
-      {isUpdating && (
+      <Button
+        text={isUpdating ? "Update" : "Create"} // Nếu isUpdating = true thì text sẽ là "Update" ngược lại thì là "Create"
+        onPress={onSubmit}
+      />
+      {isUpdating && ( //Nếu isUpdating = true thì nút "Delete" sẽ được hiển thị.
         <Text onPress={confirmDelete} style={styles.textButton}>
           Delete
         </Text>
