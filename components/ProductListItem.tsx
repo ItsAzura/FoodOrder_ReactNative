@@ -21,7 +21,12 @@ const ProductListItem = ({ product }: ProductListItemProps) => {
 
   return (
     //Link: Điều hướng người dùng đến các trang khác hoặc điều hướng nội dung trong ứng dụng mà không cần tải lại trang
-    <Link href={`./${segments.join("/")}/${product.id}`} asChild>
+    <Link
+      href={`${segments[0] === "(admin)" ? "/(admin)" : "/(tabs)"}/menu/${
+        product.id
+      }`}
+      asChild
+    >
       <Pressable style={styles.container}>
         <Image
           source={{ uri: product.image || defaultPizzaImg }} //Có img thì product.image ko thì defaultPizzaImg

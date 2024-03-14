@@ -4,6 +4,7 @@ import { Colors } from "react-native/Libraries/NewAppScreen";
 import Button from "@/components/Button";
 import { defaultPizzaImg } from "@/components/ProductListItem";
 import * as ImagePicker from "expo-image-picker";
+import { Stack } from "expo-router";
 
 const CreateProductScreen = () => {
   //Khởi tạo trạng thái của name
@@ -35,14 +36,17 @@ const CreateProductScreen = () => {
   //Hàm kiểm tra xem lỗi khi nhập vào các trường hay không?
   const validateInput = () => {
     setErrors("");
+    //Kiểm tra xem người dùng đã nhập vào trường name hay chưa?
     if (!name) {
       setErrors("Name is required");
       return false;
     }
+    //Kiểm tra xem người dùng đã nhập vào trường price hay chưa?
     if (!price) {
       setErrors("Price is required");
       return false;
     }
+    //Kiểm tra xem người dùng đã nhập vào trường price là một số hay không?
     if (isNaN(parseFloat(price))) {
       setErrors("Price must be a number");
       return false;
@@ -50,15 +54,16 @@ const CreateProductScreen = () => {
     return true;
   };
 
+  // Hàm Chọn Img
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images, //mediaTypes: Loại phương tiện mà người dùng có thể chọn.
+      allowsEditing: true, //cho phép chỉnh ảnh
+      aspect: [4, 3], // Xác định tỷ lệ khung hình
+      quality: 1, //Xác định chất lượng img
     });
 
+    //Kiểm tra xem người dùng đã chọn ảnh từ thư viện chưa?
     if (!result.canceled) {
       setImg(result.assets[0].uri);
     }
@@ -66,24 +71,32 @@ const CreateProductScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Stack.Screen options={{ title: "Create Product" }} />
+
       <Text>create</Text>
 
-      <Image source={{ uri: img || defaultPizzaImg }} style={styles.image} />
+      <Image
+        source={{ uri: img || defaultPizzaImg }} //Có img thì product.image ko thì defaultPizzaImg
+        style={styles.image}
+      />
 
-      <Text onPress={pickImage} style={styles.textButton}>
+      <Text
+        onPress={pickImage} //Khi người dùng nhấn vào nút "Select Image" thì hàm pickImage sẽ được gọi.
+        style={styles.textButton}
+      >
         Select Image
       </Text>
 
       <Text style={styles.label}>Product Name</Text>
       <TextInput
-        onChangeText={setName}
+        onChangeText={setName} //setName: Hàm này sẽ được gọi khi người dùng nhập vào trường input.
         placeholder="Product Name"
         style={styles.input}
       />
 
       <Text style={styles.label}>Price ($)</Text>
       <TextInput
-        onChangeText={setPrice}
+        onChangeText={setPrice} //setPrice: Hàm này sẽ được gọi khi người dùng nhập vào trường input.
         placeholder="9.99"
         style={styles.input}
         keyboardType="numeric"
