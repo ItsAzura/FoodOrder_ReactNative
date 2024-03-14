@@ -1,10 +1,10 @@
-import { View, Text, StyleSheet, TextInput, Image } from "react-native";
+import { View, Text, StyleSheet, TextInput, Image, Alert } from "react-native";
 import React, { useState } from "react";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import Button from "@/components/Button";
 import { defaultPizzaImg } from "@/components/ProductListItem";
 import * as ImagePicker from "expo-image-picker";
-import { Stack } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 
 const CreateProductScreen = () => {
   //Khởi tạo trạng thái của name
@@ -16,10 +16,21 @@ const CreateProductScreen = () => {
   //Khởi tạo trạng thái của image
   const [img, setImg] = useState<string | null>(null);
 
+  const { id } = useLocalSearchParams();
+  const isUpdating = !!id;
+
   //Hàm reset các trường input
   const resetFields = () => {
     setName("");
     setPrice("");
+  };
+
+  const onSubmit = () => {
+    if (isUpdating) {
+      onUpdate();
+    } else {
+      onCreate();
+    }
   };
 
   //khi tạo sản phẩm mớI
@@ -31,6 +42,34 @@ const CreateProductScreen = () => {
     console.log("Create Product: ", name, price);
 
     resetFields();
+  };
+
+  const onUpdate = () => {
+    if (!validateInput()) {
+      return;
+    }
+
+    console.log("Update Product: ", name, price);
+
+    resetFields();
+  };
+
+  const onDelete = () => {
+    console.warn("Delete");
+  };
+
+  const confirmDelete = () => {
+    Alert.alert("Confirm", "Are you sure you want to delete this product?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: onDelete,
+      },
+    ]);
   };
 
   //Hàm kiểm tra xem lỗi khi nhập vào các trường hay không?
@@ -71,7 +110,9 @@ const CreateProductScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ title: "Create Product" }} />
+      <Stack.Screen
+        options={{ title: isUpdating ? "Update Product" : "Create Product" }}
+      />
 
       <Text>create</Text>
 
@@ -103,7 +144,12 @@ const CreateProductScreen = () => {
       />
 
       <Text style={{ color: "red" }}>{errors}</Text>
-      <Button text="Create" onPress={onCreate} />
+      <Button text={isUpdating ? "Update" : "Create"} onPress={onSubmit} />
+      {isUpdating && (
+        <Text onPress={confirmDelete} style={styles.textButton}>
+          Delete
+        </Text>
+      )}
     </View>
   );
 };
