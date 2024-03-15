@@ -5,10 +5,13 @@ import orders from "@/assets/data/orders";
 import OrderItemListItem from "@/components/OrderItemListItem";
 
 const OrderDetailScreen = () => {
+  //giá trị của id sẽ chứa giá trị của tham số truy vấn id từ URL hiện tại.
   const { id } = useLocalSearchParams();
 
+  //Tìm kiếm đơn hàng có id trùng với id từ URL hiện tại.
   const order = orders.find((o) => o.id.toString() === id);
 
+  //Nếu không tìm thấy đơn hàng, hiển thị thông báo "Order not found!".
   if (!order) {
     return <Text>Order not found!</Text>;
   }

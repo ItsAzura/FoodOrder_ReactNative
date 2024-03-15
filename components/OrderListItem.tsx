@@ -7,13 +7,16 @@ import { Link, useSegments } from "expo-router";
 
 dayjs.extend(relativeTime);
 
+//Định nghĩa kiểu dữ liệu các item theo Order trong OrderListItem
 type OrderListItemProps = {
   order: Order;
 };
 
+//Định nghĩa hàm OrderListItem
 const OrderListItem = ({ order }: OrderListItemProps) => {
   const segments = useSegments();
 
+  //Trả về một item chứa Link, khi người dùng click vào sẽ chuyển hướng đến trang chi tiết đơn hàng
   return (
     <Link
       href={`${segments[0] === "(admin)" ? "/(admin)" : "/(tabs)"}/orders/${
