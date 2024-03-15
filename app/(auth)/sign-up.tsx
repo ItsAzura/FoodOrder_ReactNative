@@ -1,12 +1,25 @@
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet, Alert } from "react-native";
 import React, { useState } from "react";
 import Button from "../../components/Button";
 import Colors from "../../constants/Colors";
 import { Link, Stack } from "expo-router";
+import { supabase } from "@/lib/supabase";
 
 const SignUpScreen = () => {
+  //Khởi tạo trạng thái của email
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  //Khởi tạo trạng thái của loading
+  const [loading, setLoading] = useState(false);
+
+  //Hàm đăng ký với email
+  async function signUpWithEmail() {
+    setLoading(true);
+    const { error } = await supabase.auth.signUp({ email, password }); //Gửi yêu cầu đăng ký người dùng mới bằng email và pass
+    if (error) Alert.alert(error.message); //Nếu có lỗi thì hiển thị thông báo
+    setLoading(false);
+    console.log("Sign Up");
+  }
 
   return (
     <View style={styles.container}>
@@ -31,7 +44,11 @@ const SignUpScreen = () => {
         secureTextEntry
       />
 
-      <Button text="Create account" />
+      <Button
+        text={loading ? "Creating account..." : "Create account"}
+        disabled={loading}
+        onPress={signUpWithEmail}
+      />
       <Link href="/sign-in" style={styles.textButton}>
         Sign in
       </Link>

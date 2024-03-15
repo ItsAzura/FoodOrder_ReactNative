@@ -4,11 +4,14 @@ import Colors from "../constants/Colors";
 import { OrderItem } from "../types";
 import { defaultPizzaImg } from "./ProductListItem";
 
+//Định nghĩa dữ liệu của các item theo OrderItem trong OrderItemListItemProps
 type OrderItemListItemProps = {
   item: OrderItem;
 };
 
+//Định nghĩa hàm OrderItemListItem
 const OrderItemListItem = ({ item }: OrderItemListItemProps) => {
+  //Trả về một item chứa thông tin của sản phẩm trong đơn hàng
   return (
     <View style={styles.container}>
       <Image
