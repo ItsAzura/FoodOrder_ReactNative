@@ -7,7 +7,7 @@ import { supabase } from "@/lib/supabase";
 
 //Đoạn mã trên sử dụng Redirect từ thư viện expo-router để thực hiện chuyển hướng từ trang index đến trang menu trong ứng dụng.
 const index = () => {
-  const { session, loading } = useAuth();
+  const { session, loading, isAdmin } = useAuth();
   //console.log(session);
 
   //Nếu đang tải thì hiển thị ActivityIndicator để giúp người dùng nhận biết rằng ứng dụng đang xử lý dữ liệu và chờ đợi.
@@ -20,6 +20,11 @@ const index = () => {
     return <Redirect href="/sign-in" />;
   }
 
+  //Nếu ko phải là admin thì chuyển hướng đến trang user
+  if (!isAdmin) {
+    return <Redirect href="/(tabs)" />;
+  }
+
   return (
     <View style={{ flex: 1, justifyContent: "center", padding: 10 }}>
       <Stack.Screen options={{ title: "Welcome" }} />
@@ -28,9 +33,6 @@ const index = () => {
       </Link>
       <Link href={"/(admin)"} asChild>
         <Button text="Admin" />
-      </Link>
-      <Link href={"/sign-in"} asChild>
-        <Button text="Sign in" />
       </Link>
       <Button onPress={() => supabase.auth.signOut()} text="Sign out" />
     </View>
