@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../../lib/supabase";
 import { Product } from "../../types";
 
-//định nghĩa 1 Hook useProductList sử dụng để lấy danh sách sản phẩm từ cơ sở dữ liệu
+//Định nghĩa 1 Hook useProductList sử dụng để lấy danh sách sản phẩm từ cơ sở dữ liệu
 export const useProductList = () => {
   return useQuery<Product[]>({
     //Đại diện cho truy vấn danh sách sản phẩm.
@@ -21,7 +21,7 @@ export const useProductList = () => {
   });
 };
 
-//định nghĩa 1 Hook useProduct sử dụng để lấy thông tin về một sản phẩm cụ thể từ cơ sở dữ liệu
+//Định nghĩa 1 Hook useProduct sử dụng để lấy thông tin về một sản phẩm cụ thể từ cơ sở dữ liệu
 export const useProduct = (id: number) => {
   return useQuery<Product>({
     // một chuỗi định danh cho loại truy vấn và id là ID của sản phẩm cụ thể.
@@ -37,6 +37,37 @@ export const useProduct = (id: number) => {
         throw new Error(error.message);
       }
       return data;
+    },
+  });
+};
+
+//Được sử dụng để thêm một sản phẩm mới vào cơ sở dữ liệu.
+export const useInsertProduct = () => {
+  //Được sử dụng để quản lý truy vấn dữ liệu.
+  const queryClient = useQueryClient();
+
+  //Thêm một bản ghi mới vào cơ sở dữ liệu.
+  return useMutation({
+    async mutationFn(data: Omit<Product, "id">) {
+      //Omit: Hàm này sẽ loại bỏ các thuộc tính được chỉ định từ một type.
+      const { error } = await supabase.from("products").insert({
+        //insert: Phương thức này sẽ thêm một bản ghi mới vào cơ sở dữ liệu.
+        name: data.name,
+        price: data.price,
+        image: data.image,
+      });
+      //Nếu có lỗi xảy ra, lỗi sẽ được trả về.
+      if (error) {
+        throw error;
+      }
+    },
+    //Khi truy vấn thành công, dữ liệu sẽ được cập nhật lại.
+    async onSuccess() {
+      await queryClient.invalidateQueries({ queryKey: ["products"] });
+    },
+    //Khi truy vấn thất bại, lỗi sẽ được hiển thị.
+    onError(error) {
+      console.log(error);
     },
   });
 };

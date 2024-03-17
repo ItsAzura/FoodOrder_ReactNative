@@ -4,7 +4,8 @@ import { Colors } from "react-native/Libraries/NewAppScreen";
 import Button from "@/components/Button";
 import { defaultPizzaImg } from "@/components/ProductListItem";
 import * as ImagePicker from "expo-image-picker";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { useInsertProduct } from "@/api/products";
 
 const CreateProductScreen = () => {
   //Khởi tạo trạng thái của name
@@ -18,6 +19,12 @@ const CreateProductScreen = () => {
 
   const { id } = useLocalSearchParams();
   const isUpdating = !!id;
+
+  //useInsertProduct: Hook này trả về một hàm mutate để thêm một sản phẩm mới vào cơ sở dữ liệu.
+  const { mutate: insertProduct } = useInsertProduct();
+
+  //useRouter: Hook này trả về một object chứa các thông tin của router.
+  const router = useRouter();
 
   //Hàm reset các trường input
   const resetFields = () => {
@@ -42,6 +49,22 @@ const CreateProductScreen = () => {
 
     console.log("Create Product: ", name, price);
 
+    //insertProduct: Hàm này sẽ thêm một sản phẩm mới vào cơ sở dữ liệu.
+    insertProduct(
+      {
+        name,
+        price: parseFloat(price),
+        image: img,
+      },
+      {
+        //Khi truy vấn thành công, thông báo sẽ được hiển thị và trường input sẽ được reset.
+        onSuccess: () => {
+          resetFields();
+          router.back();
+        },
+      }
+    );
+    //reset các trường input
     resetFields();
   };
 
