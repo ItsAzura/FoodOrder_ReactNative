@@ -5,7 +5,12 @@ import Button from "@/components/Button";
 import { defaultPizzaImg } from "@/components/ProductListItem";
 import * as ImagePicker from "expo-image-picker";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { useInsertProduct, useProduct, useUpdateProduct } from "@/api/products";
+import {
+  useDeleteProduct,
+  useInsertProduct,
+  useProduct,
+  useUpdateProduct,
+} from "@/api/products";
 
 const CreateProductScreen = () => {
   //Khởi tạo trạng thái của name
@@ -28,6 +33,8 @@ const CreateProductScreen = () => {
   const { mutate: updateProduct } = useUpdateProduct();
   //Lấy thông tin sản phẩm cụ thể từ cơ sở dữ liệu.
   const { data: updatingProduct } = useProduct(id);
+
+  const { mutate: deleteProduct } = useDeleteProduct();
 
   //useRouter: Hook này trả về một object chứa các thông tin của router.
   const router = useRouter();
@@ -56,30 +63,24 @@ const CreateProductScreen = () => {
     }
   };
 
-  //khi tạo sản phẩm mớI
-  const onCreate = () => {
+  //khi tạo sản phẩm mới
+  const onCreate = async () => {
     if (!validateInput()) {
       return;
     }
-
     console.log("Create Product: ", name, price);
 
-    //insertProduct: Hàm này sẽ thêm một sản phẩm mới vào cơ sở dữ liệu.
-    insertProduct(
-      {
-        name,
-        price: parseFloat(price),
-        image: img,
-      },
-      {
-        //Khi truy vấn thành công, thông báo sẽ được hiển thị và trường input sẽ được reset.
-        onSuccess: () => {
-          resetFields();
-          router.back();
-        },
-      }
-    );
-    //reset các trường input
+    if (insertProduct) {
+      insertProduct(
+        { name, price: parseFloat(price), image: img },
+        {
+          onSuccess: () => {
+            resetFields();
+            router.back();
+          },
+        }
+      );
+    }
     resetFields();
   };
 
@@ -88,17 +89,17 @@ const CreateProductScreen = () => {
     if (!validateInput()) {
       return;
     }
-
-    updateProduct(
-      { id, name, price: parseFloat(price), image: img },
-      {
-        onSuccess: () => {
-          resetFields();
-          router.back();
-        },
-      }
-    );
-
+    if (updateProduct) {
+      updateProduct(
+        { id, name, price: parseFloat(price), image: img },
+        {
+          onSuccess: () => {
+            resetFields();
+            router.back();
+          },
+        }
+      );
+    }
     console.log("Update Product: ", name, price);
 
     resetFields();
@@ -106,7 +107,15 @@ const CreateProductScreen = () => {
 
   //Hàm xóa sản phẩm
   const onDelete = () => {
-    console.warn("Delete");
+    if (deleteProduct) {
+      deleteProduct(id, {
+        onSuccess: () => {
+          resetFields();
+          router.replace("/(admin)");
+        },
+      });
+      console.warn("Delete", id);
+    }
   };
 
   //Hàm xác nhận xóa sản phẩm

@@ -48,12 +48,12 @@ export const useInsertProduct = () => {
 
   //Thêm một bản ghi mới vào cơ sở dữ liệu.
   return useMutation({
-    async mutationFn(data: Omit<Product, "id">) {
+    async mutationFn(data: any) {
       //Omit: Hàm này sẽ loại bỏ các thuộc tính được chỉ định từ một type.
       const { error } = await supabase.from("products").insert({
         //insert: Phương thức này sẽ thêm một bản ghi mới vào cơ sở dữ liệu.
         name: data.name,
-        price: data.price,
+        price: data.price ? data.price.toString() : "",
         image: data.image,
       });
       //Nếu có lỗi xảy ra, lỗi sẽ được trả về.
@@ -98,6 +98,26 @@ export const useUpdateProduct = () => {
     //Khi truy vấn thất bại, lỗi sẽ được hiển thị.
     onError(error) {
       console.log(error);
+    },
+  });
+};
+
+//Định nghĩa một hook tùy chỉnh để xóa một sản phẩm cụ thể từ cơ sở dữ liệu
+export const useDeleteProduct = () => {
+  const queryClient = useQueryClient();
+  //Được cấu hình để thực hiện hành động xóa sản phẩm.
+  return useMutation({
+    //Thực hiện việc gọi API để xóa sản phẩm từ cơ sở dữ liệu Supabase
+    async mutationFn(id: number) {
+      const { error } = await supabase.from("products").delete().eq("id", id);
+      if (error) {
+        throw new Error(error.message);
+      }
+    },
+    //Sau khi xóa sản phẩm thành công
+    async onSuccess() {
+      //Để làm mới cache và cập nhật dữ liệu sản phẩm, đảm bảo rằng danh sách sản phẩm được hiển th
+      await queryClient.invalidateQueries({ queryKey: ["products"] });
     },
   });
 };
