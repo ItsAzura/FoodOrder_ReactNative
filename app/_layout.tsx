@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import { useColorScheme } from "@/components/useColorScheme";
 import CartProvider from "@/providers/CartProvider";
 import AuthProvider from "@/providers/AuthProvider";
+import QueryProvider from "@/providers/QueryProvider";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -57,15 +58,18 @@ function RootLayoutNav() {
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <AuthProvider //đảm bảo rằng các thành phần đó đều có thể truy cập dữ liệu về người dùng mà không cần truyền props.
       >
-        <CartProvider //đảm bảo rằng các thành phần đó đều có thể truy cập dữ liệu về giỏ hàng mà không cần truyền props.
+        <QueryProvider //đảm bảo rằng các thành phần đó đều có thể truy cập dữ liệu từ các truy vấn mà không cần truyền props.
         >
-          <Stack>
-            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="(admin)" options={{ headerShown: false }} />
-            <Stack.Screen name="cart" options={{ presentation: "modal" }} />
-          </Stack>
-        </CartProvider>
+          <CartProvider //đảm bảo rằng các thành phần đó đều có thể truy cập dữ liệu về giỏ hàng mà không cần truyền props.
+          >
+            <Stack>
+              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="(admin)" options={{ headerShown: false }} />
+              <Stack.Screen name="cart" options={{ presentation: "modal" }} />
+            </Stack>
+          </CartProvider>
+        </QueryProvider>
       </AuthProvider>
     </ThemeProvider>
   );

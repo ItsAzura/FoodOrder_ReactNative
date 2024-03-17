@@ -1,8 +1,21 @@
-import { FlatList, StyleSheet } from "react-native";
-import products from "@/assets/data/products";
+import { ActivityIndicator, FlatList, StyleSheet } from "react-native";
 import ProductListItem from "@/components/ProductListItem";
+import { useProductList } from "@/api/products";
 
 export default function MenuScreen() {
+  //lấy dữ liệu về danh sách sản phẩm từ supabase
+  const { data: products, isLoading, error } = useProductList();
+
+  //Nếu đang tải thì hiển thị ActivityIndicator để giúp người dùng nhận biết rằng ứng dụng đang xử lý dữ liệu và chờ đợi.
+  if (isLoading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
+  //Nếu có lỗi xảy ra, hiển thị thông báo lỗi
+  if (error) {
+    return <div>Failed to fetch products</div>;
+  }
+
   return (
     <FlatList //Một component hiển thị danh sách dữ liệu
       data={products} //chứa dữ liệu của danh sách cần hiển thị
