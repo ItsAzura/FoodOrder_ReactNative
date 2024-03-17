@@ -20,3 +20,23 @@ export const useProductList = () => {
     },
   });
 };
+
+//định nghĩa 1 Hook useProduct sử dụng để lấy thông tin về một sản phẩm cụ thể từ cơ sở dữ liệu
+export const useProduct = (id: number) => {
+  return useQuery<Product>({
+    // một chuỗi định danh cho loại truy vấn và id là ID của sản phẩm cụ thể.
+    queryKey: ["product", id],
+    //Là một hàm bất đồng bộ được sử dụng để thực hiện truy vấn dữ liệu
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("id", id)
+        .single();
+      if (error) {
+        throw new Error(error.message);
+      }
+      return data;
+    },
+  });
+};
