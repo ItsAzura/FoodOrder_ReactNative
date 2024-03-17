@@ -71,3 +71,33 @@ export const useInsertProduct = () => {
     },
   });
 };
+
+//Được sử dụng để cập nhật thông tin của một sản phẩm cụ thể.
+export const useUpdateProduct = () => {
+  //Được sử dụng để quản lý truy vấn dữ liệu.
+  const queryClient = useQueryClient();
+  //Cập nhật thông tin của một sản phẩm cụ thể.
+  return useMutation({
+    async mutationFn({ id, ...update }: Product) {
+      const { data, error } = await supabase
+        .from("products")
+        .update(update)
+        .eq("id", id)
+        .select();
+
+      if (error) {
+        throw error;
+      }
+      return data;
+    },
+    //Khi truy vấn thành công, dữ liệu sẽ được cập nhật lại.
+    async onSuccess(_, { id }) {
+      await queryClient.invalidateQueries({ queryKey: ["products"] });
+      await queryClient.invalidateQueries({ queryKey: ["product", id] });
+    },
+    //Khi truy vấn thất bại, lỗi sẽ được hiển thị.
+    onError(error) {
+      console.log(error);
+    },
+  });
+};

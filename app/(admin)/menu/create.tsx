@@ -1,11 +1,11 @@
 import { View, Text, StyleSheet, TextInput, Image, Alert } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import Button from "@/components/Button";
 import { defaultPizzaImg } from "@/components/ProductListItem";
 import * as ImagePicker from "expo-image-picker";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { useInsertProduct } from "@/api/products";
+import { useInsertProduct, useProduct, useUpdateProduct } from "@/api/products";
 
 const CreateProductScreen = () => {
   //Khởi tạo trạng thái của name
@@ -17,14 +17,29 @@ const CreateProductScreen = () => {
   //Khởi tạo trạng thái của image
   const [img, setImg] = useState<string | null>(null);
 
-  const { id } = useLocalSearchParams();
+  const { id: idString } = useLocalSearchParams();
+  const id = parseFloat(typeof idString === "string" ? idString : idString[0]);
+
   const isUpdating = !!id;
 
   //useInsertProduct: Hook này trả về một hàm mutate để thêm một sản phẩm mới vào cơ sở dữ liệu.
   const { mutate: insertProduct } = useInsertProduct();
+  //useUpdateProduct: Hook này trả về một hàm mutate để cập nhật thông tin của một sản phẩm cụ thể.
+  const { mutate: updateProduct } = useUpdateProduct();
+  //Lấy thông tin sản phẩm cụ thể từ cơ sở dữ liệu.
+  const { data: updatingProduct } = useProduct(id);
 
   //useRouter: Hook này trả về một object chứa các thông tin của router.
   const router = useRouter();
+
+  //Được kích hoạt mỗi khi giá trị của updatingProduct thay đổi.
+  useEffect(() => {
+    if (updatingProduct) {
+      setName(updatingProduct.name);
+      setPrice(updatingProduct.price.toString());
+      setImg(updatingProduct.image);
+    }
+  }, [updatingProduct]);
 
   //Hàm reset các trường input
   const resetFields = () => {
@@ -73,6 +88,16 @@ const CreateProductScreen = () => {
     if (!validateInput()) {
       return;
     }
+
+    updateProduct(
+      { id, name, price: parseFloat(price), image: img },
+      {
+        onSuccess: () => {
+          resetFields();
+          router.back();
+        },
+      }
+    );
 
     console.log("Update Product: ", name, price);
 
